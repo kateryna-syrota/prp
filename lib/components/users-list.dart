@@ -1,5 +1,7 @@
 import 'package:admin/pages/users.dart';
+import 'package:admin/services/auth.dart';
 import 'package:admin/services/database.dart';
+import 'package:admin/services/repositore_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -13,20 +15,6 @@ class _UsersListState extends State<UsersList> {
   void initState() {
     clearFilter();
     super.initState();
-  }
-
-  _UsersListState() {
-    firestoreInstance.collection("users").snapshots().listen((result) {
-      result.docs.forEach((result) {
-        users.add(Users(
-            uid: result.id,
-            title: result.data()["title"],
-            author: result.data()["author"],
-            description: result.data()["description"],
-            level: result.data()["level"]));
-        print(result.data()["title"]);
-      });
-    });
   }
 
   final firestoreInstance = FirebaseFirestore.instance;
@@ -67,36 +55,8 @@ class _UsersListState extends State<UsersList> {
     return list;
   }
 
-  usersListCreate() async {
-    firestoreInstance.collection("users").get().then((querySnapshot) {
-      querySnapshot.docs.forEach((result) {
-        users.add(Users(
-            uid: result.id,
-            title: result.data()["title"],
-            author: result.data()["author"],
-            description: result.data()["description"],
-            level: result.data()["level"]));
-      });
-    });
-    usersList = Expanded(
-      child: ListView.builder(
-        itemBuilder: (context, i) {
-          return Card(
-            elevation: 2.0,
-            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: Container(
-              child: ListTile(title: Text(users[i].title)),
-            ),
-          );
-        },
-        itemCount: users.length,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    print(users.length);
     firestoreInstance.collection("users").snapshots().listen((result) {
       result.docs.forEach((result) {
         users.add(Users(
@@ -105,25 +65,31 @@ class _UsersListState extends State<UsersList> {
             author: result.data()["author"],
             description: result.data()["description"],
             level: result.data()["level"]));
-        print(result.data()["title"]);
       });
     });
-    print(users.length);
-    print("////////////");
-    usersList = Expanded(
-      child: ListView.builder(
-        itemBuilder: (context, i) {
-          return Card(
-            elevation: 2.0,
-            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: Container(
-              child: ListTile(title: Text(users[i].title)),
+    usersList = FutureBuilder(
+        future: AuthService().getUserData(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          return Expanded(
+            child: ListView.builder(
+              itemCount: 20,
+              itemBuilder: (context, i) {
+                print(snapshot.data!.docs
+                    .map((e) => e.data()['title'])
+                    .toString());
+                return Card(
+                  elevation: 2.0,
+                  margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  child: Container(
+                      child: ListTile(
+                          title: Text(
+                              "${snapshot.data!.docs.map((e) => e.data()['title']).toString()}"))),
+                );
+              },
             ),
           );
-        },
-        itemCount: users.length,
-      ),
-    );
+        });
+
     /*  var filterInfo = Container(
       margin: EdgeInsets.only(top: 3, left: 7, right: 7, bottom: 5),
       decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
