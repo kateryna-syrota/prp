@@ -70,13 +70,32 @@ class _UsersListState extends State<UsersList> {
     usersList = FutureBuilder(
         future: AuthService().getUserData(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          print("///////////0");
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("Loading");
+          }
+
           return Expanded(
-            child: ListView.builder(
-              itemCount: 20,
+              child: new ListView(
+            children: snapshot.data!.docs.map((DocumentSnapshot document) {
+              return new Card(
+                  elevation: 2.0,
+                  margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  child: Container(
+                      child: ListTile(
+                    title: new Text(document.data()!['title']),
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.delete_forever_rounded),
+                      color: Colors.red,
+                    ),
+                  )));
+            }).toList(),
+          )
+              /*child: ListView.builder(
+              itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, i) {
-                print(snapshot.data!.docs
-                    .map((e) => e.data()['title'])
-                    .toString());
+                print(snapshot.requireData);
                 return Card(
                   elevation: 2.0,
                   margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -86,8 +105,8 @@ class _UsersListState extends State<UsersList> {
                               "${snapshot.data!.docs.map((e) => e.data()['title']).toString()}"))),
                 );
               },
-            ),
-          );
+            ),*/
+              );
         });
 
     /*  var filterInfo = Container(
