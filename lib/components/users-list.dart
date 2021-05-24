@@ -1,3 +1,5 @@
+import 'package:admin/pages/home.dart';
+import 'package:admin/pages/landing.dart';
 import 'package:admin/pages/users.dart';
 import 'package:admin/services/auth.dart';
 import 'package:admin/services/database.dart';
@@ -57,24 +59,12 @@ class _UsersListState extends State<UsersList> {
 
   @override
   Widget build(BuildContext context) {
-    firestoreInstance.collection("users").snapshots().listen((result) {
-      result.docs.forEach((result) {
-        users.add(Users(
-            uid: result.id,
-            title: result.data()["title"],
-            author: result.data()["author"],
-            description: result.data()["description"],
-            level: result.data()["level"]));
-      });
-    });
     usersList = FutureBuilder(
         future: AuthService().getUserData(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          print("///////////0");
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Text("Loading");
           }
-
           return Expanded(
               child: new ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
@@ -83,9 +73,36 @@ class _UsersListState extends State<UsersList> {
                   margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   child: Container(
                       child: ListTile(
-                    title: new Text(document.data()!['title']),
+                    title: new Text(document.data()!['nickname']),
                     trailing: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // AuthService().delete(document.id);
+                        showDialog(
+                            context: context,
+                            builder: (_) => new AlertDialog(
+                                  content: new Text("Delete user " +
+                                      document.data()!['nickname'] +
+                                      "?"),
+                                  actions: <Widget>[
+                                    ListTile(
+                                        trailing: FlatButton(
+                                          child: Text('NO'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        leading: FlatButton(
+                                          child: Text('YES'),
+                                          onPressed: () {
+                                            setState(() {
+                                              AuthService().delete(document.id);
+                                              Navigator.of(context).pop();
+                                            });
+                                          },
+                                        ))
+                                  ],
+                                ));
+                      },
                       icon: Icon(Icons.delete_forever_rounded),
                       color: Colors.red,
                     ),

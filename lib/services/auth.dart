@@ -39,4 +39,10 @@ class AuthService {
   Future<QuerySnapshot>? getUserData() async {
     return FirebaseFirestore.instance.collection('users').get();
   }
+
+  delete(String uid) {
+    collectionReference.doc(uid).delete().then((_) {
+      print("success!");
+    });
+  }
 }
