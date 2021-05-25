@@ -76,7 +76,6 @@ class _UsersListState extends State<UsersList> {
                     title: new Text(document.data()!['nickname']),
                     trailing: IconButton(
                       onPressed: () {
-                        // AuthService().delete(document.id);
                         showDialog(
                             context: context,
                             builder: (_) => new AlertDialog(
@@ -108,26 +107,11 @@ class _UsersListState extends State<UsersList> {
                     ),
                   )));
             }).toList(),
-          )
-              /*child: ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, i) {
-                print(snapshot.requireData);
-                return Card(
-                  elevation: 2.0,
-                  margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: Container(
-                      child: ListTile(
-                          title: Text(
-                              "${snapshot.data!.docs.map((e) => e.data()['title']).toString()}"))),
-                );
-              },
-            ),*/
-              );
+          ));
         });
 
-    /*  var filterInfo = Container(
-      margin: EdgeInsets.only(top: 3, left: 7, right: 7, bottom: 5),
+    var filterInfo = Container(
+      margin: EdgeInsets.only(top: 15, left: 7, right: 7, bottom: 10),
       decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
       height: 40,
       child: RaisedButton(
@@ -148,18 +132,6 @@ class _UsersListState extends State<UsersList> {
         },
       ),
     );
-
-    var levelMenuItems = <String>[
-      'Any Level',
-      'Beginner',
-      'Intermediate',
-      'Advanced'
-    ].map((String value) {
-      return new DropdownMenuItem<String>(
-        value: value,
-        child: new Text(value),
-      );
-    }).toList();
 
     var filterForm = AnimatedContainer(
       margin: EdgeInsets.symmetric(vertical: 0.0, horizontal: 7),
@@ -215,12 +187,12 @@ class _UsersListState extends State<UsersList> {
       duration: const Duration(milliseconds: 400),
       curve: Curves.fastOutSlowIn,
       height: filterHeight,
-    );*/
+    );
 
     return Column(
       children: <Widget>[
-        /*  filterInfo,
-        filterForm,*/
+        filterInfo,
+        filterForm,
         usersList,
       ],
     );

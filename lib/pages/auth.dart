@@ -81,16 +81,18 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           child: Column(
         children: <Widget>[
           Padding(
-              padding: EdgeInsets.only(bottom: 20, top: 10),
+              padding:
+                  EdgeInsets.only(bottom: 20, top: 70, left: 350, right: 350),
               child:
                   _input(Icon(Icons.email), "EMAIL", _emailController, false)),
           Padding(
-              padding: EdgeInsets.only(bottom: 20),
+              padding:
+                  EdgeInsets.only(bottom: 35, left: 350, right: 350, top: 10),
               child: _input(
                   Icon(Icons.lock), "PASSWORD", _passwordController, true)),
           SizedBox(height: 20),
           Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
+              padding: EdgeInsets.only(left: 370, right: 370),
               child: Container(
                   height: 50,
                   width: MediaQuery.of(context).size.width,
