@@ -59,7 +59,47 @@ class _NotesListState extends State<NotesList> {
                                           children: [
                                             ListTile(
                                               trailing: IconButton(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder:
+                                                          (_) =>
+                                                              new AlertDialog(
+                                                                content: new Text(
+                                                                    "Delete notes " +
+                                                                        snapshot
+                                                                            .data!
+                                                                            .docs[index]['title'] +
+                                                                        "?"),
+                                                                actions: <
+                                                                    Widget>[
+                                                                  ListTile(
+                                                                      trailing:
+                                                                          FlatButton(
+                                                                        child: Text(
+                                                                            'NO'),
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                        },
+                                                                      ),
+                                                                      leading:
+                                                                          FlatButton(
+                                                                        child: Text(
+                                                                            'YES'),
+                                                                        onPressed:
+                                                                            () {
+                                                                          setState(
+                                                                              () {
+                                                                            AuthService().deleteNotes(snapshot.data!.docs[index].id);
+                                                                            Navigator.of(context).pop();
+                                                                          });
+                                                                        },
+                                                                      ))
+                                                                ],
+                                                              ));
+                                                },
                                                 icon: Icon(Icons
                                                     .delete_forever_rounded),
                                                 color: Colors.red,

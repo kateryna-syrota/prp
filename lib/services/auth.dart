@@ -1,13 +1,13 @@
 import 'package:admin/domain/myuser.dart';
-import 'package:admin/pages/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class AuthService {
   final FirebaseAuth _fAuth = FirebaseAuth.instance;
   final CollectionReference collectionReference =
       FirebaseFirestore.instance.collection('users');
+  final CollectionReference collectionReferenceNotes =
+      FirebaseFirestore.instance.collection('notes');
 
   Future<MyUser?>? signInWithEmainAndPasswordo(
       String email, String password) async {
@@ -42,6 +42,12 @@ class AuthService {
 
   delete(String uid) {
     collectionReference.doc(uid).delete().then((_) {
+      print("success!");
+    });
+  }
+
+  deleteNotes(String uid) {
+    collectionReferenceNotes.doc(uid).delete().then((_) {
       print("success!");
     });
   }
