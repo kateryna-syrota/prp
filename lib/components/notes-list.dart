@@ -105,6 +105,8 @@ class _NotesListState extends State<NotesList> {
                                                 color: Colors.red,
                                               ),
                                             ),
+                                            Image.network(
+                                                '${snapshot.data!.docs[index]['photoUrl']}'),
                                             Padding(
                                               padding: EdgeInsets.only(
                                                   top: 20, left: 30, right: 30),

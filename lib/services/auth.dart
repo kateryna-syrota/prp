@@ -36,8 +36,15 @@ class AuthService {
         .map((User? user) => user != null ? MyUser.fromFirebase(user) : null);
   }
 
-  Future<QuerySnapshot>? getUserData() async {
-    return FirebaseFirestore.instance.collection('users').get();
+  Future<QuerySnapshot>? getUserData(String nickname) async {
+    if (nickname == "All users" || nickname == "") {
+      return FirebaseFirestore.instance.collection('users').get();
+    } else {
+      return FirebaseFirestore.instance
+          .collection('users')
+          .where("nickname", isEqualTo: nickname)
+          .get();
+    }
   }
 
   delete(String uid) {

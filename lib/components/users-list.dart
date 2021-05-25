@@ -21,7 +21,8 @@ class _UsersListState extends State<UsersList> {
 
   final firestoreInstance = FirebaseFirestore.instance;
   final users = <Users>[];
-
+  var filterNickname = "All users";
+  var filterNicknameInput = "";
   var filterOnlyMyUsers = false;
   var filterTitle = "title";
   var filterTitleController = TextEditingController();
@@ -33,9 +34,7 @@ class _UsersListState extends State<UsersList> {
   var usersList;
   List<Users> filter() {
     setState(() {
-      filterText = filterOnlyMyUsers ? 'My Workouts' : 'All workouts';
-      filterText += '/' + filterLevel;
-      if (filterTitle.isNotEmpty) filterText += '/' + filterTitle;
+      filterText = filterNickname;
       filterHeight = 0;
     });
 
@@ -45,7 +44,8 @@ class _UsersListState extends State<UsersList> {
 
   List<Users> clearFilter() {
     setState(() {
-      filterText = 'All workouts/Any Level';
+      filterNickname = "All users";
+      filterText = filterNickname;
       filterOnlyMyUsers = false;
       filterTitle = '';
       filterLevel = 'Any Level';
@@ -60,7 +60,7 @@ class _UsersListState extends State<UsersList> {
   @override
   Widget build(BuildContext context) {
     usersList = FutureBuilder(
-        future: AuthService().getUserData(),
+        future: AuthService().getUserData(filterNickname),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Text("Loading");
@@ -77,7 +77,12 @@ class _UsersListState extends State<UsersList> {
                               EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           child: Container(
                               child: ListTile(
-                            title: new Text(document.data()!['nickname']),
+                            title: new Text("nicname_user:  " +
+                                document.data()!['nickname'] +
+                                "        account_type_user:  " +
+                                document.data()!['account_type'] +
+                                "        id_user:  " +
+                                document.id),
                             trailing: IconButton(
                               onPressed: () {
                                 showDialog(
@@ -136,7 +141,7 @@ class _UsersListState extends State<UsersList> {
             ),
             onPressed: () {
               setState(() {
-                filterHeight = (filterHeight == 0.0 ? 280.0 : 0.0);
+                filterHeight = (filterHeight == 0.0 ? 160.0 : 0.0);
               });
             },
           ),
@@ -144,52 +149,51 @@ class _UsersListState extends State<UsersList> {
 
     var filterForm = AnimatedContainer(
       margin: EdgeInsets.symmetric(vertical: 0.0, horizontal: 7),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              SwitchListTile(
-                  title: const Text('Only My Workouts'),
-                  value: filterOnlyMyUsers,
-                  onChanged: (bool val) =>
-                      setState(() => filterOnlyMyUsers = val)),
-              TextFormField(
-                controller: filterTitleController,
-                decoration: const InputDecoration(labelText: 'Title'),
-                onChanged: (String val) => setState(() => filterTitle = val),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: RaisedButton(
-                        onPressed: () {
-                          filter();
-                        },
-                        child: Text("Apply",
-                            style: TextStyle(color: Colors.white)),
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      flex: 1,
-                      child: RaisedButton(
-                        onPressed: () {
-                          clearFilter();
-                        },
-                        child: Text("Clear",
-                            style: TextStyle(color: Colors.white)),
-                        color: Colors.red,
-                      ),
-                    )
-                  ],
+      child: Padding(
+        padding: EdgeInsets.only(top: 15, left: 50, right: 50),
+        child: Card(
+          child: Padding(
+            padding: EdgeInsets.only(top: 15, left: 50, right: 50),
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: filterTitleController,
+                  decoration: const InputDecoration(labelText: 'Nickname'),
+                  onChanged: (String val) => filterNicknameInput = val,
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: RaisedButton(
+                          onPressed: () {
+                            filterNickname = filterNicknameInput;
+                            filter();
+                          },
+                          child: Text("Apply",
+                              style: TextStyle(color: Colors.white)),
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        flex: 1,
+                        child: RaisedButton(
+                          onPressed: () {
+                            clearFilter();
+                          },
+                          child: Text("Clear",
+                              style: TextStyle(color: Colors.white)),
+                          color: Colors.red,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
