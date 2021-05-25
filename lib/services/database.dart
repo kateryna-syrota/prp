@@ -4,6 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class GetUserName extends StatelessWidget {
+  final CollectionReference _usersCollection =
+      FirebaseFirestore.instance.collection('users');
+  final CollectionReference _notesCollection =
+      FirebaseFirestore.instance.collection('notes');
   final firestoreInstance = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
