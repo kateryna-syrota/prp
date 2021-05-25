@@ -8,4 +8,6 @@ class RepositoryFirestore {
   logout() => firestoreProvider.logOut();
 
   getCurrentUser() => firestoreProvider.currentUser;
+
+  getUserData(Strinf nickname) => firestoreProvider.getUserData(nickname);
 }
