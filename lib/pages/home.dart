@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        //backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).highlightColor,
         appBar: AppBar(
           title: Text("Admin"),
           leading: Icon(Icons.admin_panel_settings),

@@ -66,72 +66,81 @@ class _UsersListState extends State<UsersList> {
             return Text("Loading");
           }
           return Expanded(
-              child: new ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              return new Card(
-                  elevation: 2.0,
-                  margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: Container(
-                      child: ListTile(
-                    title: new Text(document.data()!['nickname']),
-                    trailing: IconButton(
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (_) => new AlertDialog(
-                                  content: new Text("Delete user " +
-                                      document.data()!['nickname'] +
-                                      "?"),
-                                  actions: <Widget>[
-                                    ListTile(
-                                        trailing: FlatButton(
-                                          child: Text('NO'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        leading: FlatButton(
-                                          child: Text('YES'),
-                                          onPressed: () {
-                                            setState(() {
-                                              AuthService().delete(document.id);
-                                              Navigator.of(context).pop();
-                                            });
-                                          },
-                                        ))
-                                  ],
-                                ));
-                      },
-                      icon: Icon(Icons.delete_forever_rounded),
-                      color: Colors.red,
-                    ),
+              child: Padding(
+                  padding: EdgeInsets.only(left: 50, right: 50),
+                  child: new ListView(
+                    children:
+                        snapshot.data!.docs.map((DocumentSnapshot document) {
+                      return new Card(
+                          elevation: 2.0,
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          child: Container(
+                              child: ListTile(
+                            title: new Text(document.data()!['nickname']),
+                            trailing: IconButton(
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => new AlertDialog(
+                                          content: new Text("Delete user " +
+                                              document.data()!['nickname'] +
+                                              "?"),
+                                          actions: <Widget>[
+                                            ListTile(
+                                                trailing: FlatButton(
+                                                  child: Text('NO'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                leading: FlatButton(
+                                                  child: Text('YES'),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      AuthService()
+                                                          .delete(document.id);
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    });
+                                                  },
+                                                ))
+                                          ],
+                                        ));
+                              },
+                              icon: Icon(Icons.delete_forever_rounded),
+                              color: Colors.red,
+                            ),
+                          )));
+                    }).toList(),
                   )));
-            }).toList(),
-          ));
         });
 
-    var filterInfo = Container(
-      margin: EdgeInsets.only(top: 15, left: 7, right: 7, bottom: 10),
-      decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
-      height: 40,
-      child: RaisedButton(
-        child: Row(
-          children: <Widget>[
-            Icon(Icons.filter_list),
-            Text(
-              filterText,
-              style: TextStyle(),
-              overflow: TextOverflow.ellipsis,
+    var filterInfo = Padding(
+        padding: EdgeInsets.only(left: 51, right: 51),
+        child: Container(
+          margin: EdgeInsets.only(top: 15, left: 7, right: 7, bottom: 10),
+          color: Colors.white12,
+          height: 40,
+          child: RaisedButton(
+            color: Colors.white,
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.filter_list),
+                Text(
+                  filterText,
+                  style: TextStyle(),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
-          ],
-        ),
-        onPressed: () {
-          setState(() {
-            filterHeight = (filterHeight == 0.0 ? 280.0 : 0.0);
-          });
-        },
-      ),
-    );
+            onPressed: () {
+              setState(() {
+                filterHeight = (filterHeight == 0.0 ? 280.0 : 0.0);
+              });
+            },
+          ),
+        ));
 
     var filterForm = AnimatedContainer(
       margin: EdgeInsets.symmetric(vertical: 0.0, horizontal: 7),

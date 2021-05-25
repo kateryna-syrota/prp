@@ -45,4 +45,11 @@ class AuthService {
       print("success!");
     });
   }
+
+  getPublicNotes() {
+    return FirebaseFirestore.instance
+        .collection('notes')
+        .where('public', isEqualTo: true)
+        .snapshots();
+  }
 }
